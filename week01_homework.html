@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Stylish&display=swap" rel="stylesheet">
+
+    <title>나만의 원페이지 쇼핑몰 만들기</title>
+
+    <style>
+        .image {
+            margin: 10px auto;
+            width: 500px;
+        }
+
+        .wrap {
+            font-family: 'Stylish', sans-serif;
+
+            width: 500px;
+            margin: auto;
+        }
+
+        .order_button {
+            width: 76.4px;
+            margin: 10px auto;
+        }
+    </style>
+
+    <Script>
+        function order_confirm() {
+            alert('주문이 완료되었습니다.');
+        }
+    </Script>
+
+</head>
+
+<body>
+<div class="image">
+    <img src="https://t1.daumcdn.net/cfile/tistory/992592335A09588444" style="max-width:100%;height:auto" width="500"
+         height="491" filename="감귤10.jpg" filemime="image/jpeg" ""="">
+
+</div>
+<div class="wrap">
+    <h1 style="display:inline">감귤을 팝니다</h1>
+    가격: 12,900원 / 박스
+
+    <P>청정제주에서 나고 자라 조선시대 임금님에게 진상될 정도로 귀했던, 새콤달콤 모두가 좋아하는 감귤!</P>
+
+    <h1>주문하기</h1>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">주문자 성함</span>
+        </div>
+        <input type="text" class="form-control" placeholder="" aria-label="Username"
+               aria-describedby="basic-addon1">
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01">수량</label>
+        </div>
+        <select class="custom-select" id="inputGroupSelect01">
+            <option selected>-- 수량을 선택하세요 --</option>
+            <option value="1">1개</option>
+            <option value="2">2개</option>
+            <option value="3">3개</option>
+        </select>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon3">주소</span>
+        </div>
+        <input type="text" class="form-control" placeholder="" aria-label="Address"
+               aria-describedby="basic-addon3">
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon4">전화번호</span>
+        </div>
+        <input type="text" class="form-control" placeholder="" aria-label="PhoneNumber"
+               aria-describedby="basic-addon4">
+    </div>
+
+    <div class="order_button">
+        <button onclick="order_confirm()" type="button" class="btn btn-primary">주문하기</button>
+    </div>
+
+</div>
+
+</body>
+</html>
