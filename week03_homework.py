@@ -21,4 +21,3 @@ for tr in trs:
     db.songs.insert_one({'rank': rank, 'title': title, 'artist': artist})
     print(rank, title, artist)
 
-
