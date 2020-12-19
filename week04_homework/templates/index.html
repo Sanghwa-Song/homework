@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <!-- Webpage Title -->
+    <title>나홀로 쇼핑몰</title>
+
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+    <!-- 구글폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+
+    <style type="text/css">
+        * {
+            font-family: 'Stylish', sans-serif;
+        }
+
+        .wrap {
+            width: 500px;
+            margin: auto;
+        }
+
+        .img {
+            background-image: url('https://t1.daumcdn.net/cfile/tistory/992592335A09588444');
+            background-size: cover;
+            background-position: center;
+            width: 500px;
+            height: 300px;
+        }
+
+        .info {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1, h5 {
+            display: inline;
+        }
+
+        .order {
+            text-align: center;
+        }
+
+        .orders {
+            margin-top: 100px;
+        }
+    </style>
+
+    <script>
+
+        $(document).ready(function () {
+            exchange_rate();
+            showOrder();
+        })
+
+        function order() {
+            let name = $('#name').val();
+            let orderCount = $('#order-count').val();
+            let address = $('#address').val();
+            let phoneNumber = $('#phone-number').val();
+
+            let counter = phoneNumber.length;
+
+            if(counter == 11){
+                let formatted = phoneNumber.slice(0,3) + '-' + phoneNumber.slice(3,7) + '-' + phoneNumber.slice(7);
+
+                phoneNumber = formatted;
+            }
+
+            if ($('#name').val() == "") {
+                alert("이름을 입력해주세요.");
+                $('#name').focus();
+                return;
+            } else if ($('#order-count').val() == "") {
+                alert("수량을 입력해주세요.");
+                $('#order-count').focus();
+                return;
+            } else if ($('#address').val() == "") {
+                alert("주소를 입력해주세요.");
+                $('#address').focus();
+                return;
+            } else if ($('#phone-number').val() == "") {
+                alert("전화번호를 입력해주세요.");
+                $('#phone-number').focus();
+                return;
+            } else if (isCelluar(phoneNumber) == false) {
+                alert("휴대폰 번호 입력 형식이 틀립니다.\n" + "010-0000-0000으로 입력해주세요.");
+                $('#phone-number').focus();
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/order",
+                data: {
+                    'name_give': name,
+                    'orderCount_give': orderCount,
+                    'address_give': address,
+                    'phoneNumber_give': phoneNumber
+                },
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        alert("주문 완료!");
+                        window.location.reload();
+                    }
+                }
+            })
+        }
+
+        function showOrder() {
+            $.ajax({
+                type: "GET",
+                url: "/order",
+                data: {},
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        let orders = response['orders'];
+
+                        for (let i = 0; i < orders.length; i++) {
+                            makeOrder(orders[i]['name'], orders[i]['orderCount'], orders[i]['address'], orders[i]['phoneNumber']);
+                        }
+                    } else {
+                        alert("주문내역을 받아오지 못했습니다.");
+                    }
+                }
+            })
+        }
+
+        function makeOrder(name, orderCount, address, phoneNumber) {
+            let orderTemp = `<tr>
+                        <th scope="col">${name}</th>
+                        <th scope="col">${orderCount}</th>
+                        <th scope="col">${address}</th>
+                        <th scope="col">${phoneNumber}</th>
+                    </tr>`
+
+            $('#orders-box').append(orderTemp);
+        }
+
+        function exchange_rate() {
+            $.ajax({
+                type: "GET",
+                url: "https://api.manana.kr/exchange/rate.json",
+                data: {},
+                success: function (response) {
+                    $('#exchangeRate').empty();
+
+                    let exchange = response[1]["rate"];
+                    let tempHtml = `달러-원 환율: ${exchange}`;
+                    $('#exchangeRate').append(tempHtml);
+                },
+            });
+        }
+
+        function isCelluar(asValue) {
+            var regExp = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/;
+
+            return regExp.test(asValue); // 형식에 맞는 경우 true 리턴
+        }
+
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="img"></div>
+      <div class="info">
+        <h1>감귤을 팝니다</h1>
+        <h5>가격: 12,900원 / 박스</h5>
+
+        <p>청정제주에서 나고 자라 조선시대 임금님에게 진상될 정도로 귀했던, 새콤달콤 모두가 좋아하는 감귤!</p>
+
+        <p id="exchangeRate" style="color: blue"></p>
+
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">주문자 이름</span>
+          </div>
+          <input id="name" type="text" class="form-control" id="order-name">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text">수량</label>
+          </div>
+          <select class="custom-select" id="order-count">
+            <option selected value=""> -- 수량을 선택하세요 --</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">주소</span>
+          </div>
+          <input id="address" type="text" class="form-control" id="order-address">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">전화번호</span>
+          </div>
+          <input id="phone-number" type="text" class="form-control" id="order-phone">
+        </div>
+        <div class="order">
+          <button onclick="order()" type="button" class="btn btn-primary">주문하기</button>
+        </div>
+      </div>
+      <div class="orders">
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col">이름</th>
+            <th scope="col">수량</th>
+            <th scope="col">주소</th>
+            <th scope="col">전화번호</th>
+          </tr>
+          </thead>
+          <tbody id="orders-box">
+          <tr>
+            <td>박르탄</td>
+            <td>10000</td>
+            <td>르탄시 코딩구 열심동</td>
+            <td>010-1234-5678</td>
+          </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
